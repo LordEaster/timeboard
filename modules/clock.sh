@@ -1,10 +1,11 @@
-#!/bin/bash
-source "$(dirname "$0")/utils.sh"
-
 show_clock() {
+    load_env
     while true; do
         clear
-        now=$(date "+%I : %M : %S %p")
+
+        # Time format
+        [[ "$TIME_FORMAT" == "24" ]] && fmt="%H : %M : %S" || fmt="%I : %M : %S %p"
+        now=$(date +"$fmt")
         date=$(date "+%A %d %B %Y")
 
         block="
@@ -13,15 +14,11 @@ $(figlet "Clock")
 $(figlet "$now")
 $date
 "
+
+        [[ "$SHOW_GUIDE" != "false" ]] && block+=$'\nPress → [i] Dashboard | [w] Weather | [e] Events | [s] Settings | [h] Help'
         show_centered_block "$block"
 
         read -rsn1 -t 1 input
-        case "$input" in
-            i) show_dashboard ;;
-            c) show_clock ;; # optional to refresh manually
-            e) show_events ;;
-            w) show_weather ;;
-            h) show_help ;;
-        esac
+        handle_shortcut "$input" && return
     done
 }

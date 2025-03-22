@@ -2,11 +2,27 @@
 source "$(dirname "$0")/utils.sh"
 
 show_dashboard() {
+    load_env
+
     while true; do
         clear
-        now=$(date "+%I : %M  %p")
+
+        # Time format
+        if [[ "$TIME_FORMAT" == "24" ]]; then
+            time_fmt="%H : %M"
+        else
+            time_fmt="%I : %M %p"
+        fi
+
+        now=$(date +"$time_fmt")
         date=$(date "+%d %B %Y")
-        weather=$(curl -s "wttr.in/?format=3")
+
+        # Weather format
+        if [[ "$TEMP_UNIT" == "F" ]]; then
+            weather=$(curl -s "wttr.in/?format=3&u")
+        else
+            weather=$(curl -s "wttr.in/?format=3")
+        fi
 
         block="
 - Random Quote and Reminder (Coming Soon) -
@@ -15,18 +31,13 @@ $(figlet "$now")
 $(figlet "$date")
 
 $weather
-
-TimeBoard | h for help
 "
+
+        [[ "$SHOW_GUIDE" != "false" ]] && block+=$'\nPress → [c] Clock | [w] Weather | [e] Events | [s] Settings | [h] Help'
+
         show_centered_block "$block"
 
         read -t 15 -rsn1 input
-        case "$input" in
-            i) show_dashboard ;;
-            c) show_clock ;;
-            e) show_events ;;
-            w) show_weather ;;
-            h) show_help ;;
-        esac
+        handle_shortcut "$input" && return
     done
 }

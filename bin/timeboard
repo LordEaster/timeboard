@@ -1,8 +1,11 @@
 #!/bin/bash
+
+# ===== Trap EXIT: Restore Cursor and Blink =====
 trap 'tput cnorm; echo -ne "\e[?12h"' EXIT
 tput civis
 echo -ne '\e[?12l'
 
+# ===== Load All Modules =====
 source "$(dirname "$0")/../setup/boot.sh"
 source "$(dirname "$0")/../modules/utils.sh"
 source "$(dirname "$0")/../modules/dashboard.sh"
@@ -10,5 +13,7 @@ source "$(dirname "$0")/../modules/clock.sh"
 source "$(dirname "$0")/../modules/weather.sh"
 source "$(dirname "$0")/../modules/events.sh"
 source "$(dirname "$0")/../modules/help.sh"
+source "$(dirname "$0")/../modules/settings.sh"
 
+# ===== Start TimeBoard =====
 show_dashboard
