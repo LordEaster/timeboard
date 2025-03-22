@@ -6,18 +6,19 @@ show_clock() {
         clear
         now=$(date "+%I : %M : %S %p")
         date=$(date "+%A %d %B %Y")
-        echo
-        echo
-        echo
-        echo
-        show_centered "$(figlet "Clock")"
-        echo
-        show_centered "$(figlet "$now")"
-        show_centered "$date"
+
+        block="
+$(figlet "Clock")
+
+$(figlet "$now")
+$date
+"
+        show_centered_block "$block"
+
         read -rsn1 -t 1 input
         case "$input" in
             i) show_dashboard ;;
-            c) show_clock ;;
+            c) show_clock ;; # optional to refresh manually
             e) show_events ;;
             w) show_weather ;;
             h) show_help ;;

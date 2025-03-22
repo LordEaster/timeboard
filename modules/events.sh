@@ -3,15 +3,13 @@ source "$(dirname "$0")/utils.sh"
 
 show_events() {
     clear
-    printf "\n\n\n\n"
-    show_centered "$(figlet "Events")"
-    echo
 
     local ROOT_DIR="$(dirname "$(dirname "$0")")"
     local DATA_FILE="$ROOT_DIR/data/events.json"
 
+    block="$(figlet "Events")"$'\n\n'
+
     if [[ -f "$DATA_FILE" && -s "$DATA_FILE" ]]; then
-        jq -r '.[] | [.date, .title] | @tsv' "$DATA_FILE" |
         while IFS=$'\t' read -r date title; do
             max_len=25
 
@@ -21,14 +19,14 @@ show_events() {
                 title=$(printf "%-${max_len}s" "$title")
             fi
 
-            line="$date  -  $title"
-            show_centered "$line"
-        done
+            block+="$date  -  $title"$'\n'
+        done < <(jq -r '.[] | [.date, .title] | @tsv' "$DATA_FILE")
     else
-        show_centered "No upcoming events"
+        block+="No upcoming events"$'\n'
     fi
 
-    echo
+    show_centered_block "$block"
+
     read -rsn1 input
     case "$input" in
         c) show_clock ;;

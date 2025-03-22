@@ -3,16 +3,15 @@ source "$(dirname "$0")/utils.sh"
 
 show_weather() {
     clear
-    echo
-    echo
-    echo
-    echo
-    show_centered "$(figlet "Weather")"
 
     weather_data=$(curl -s "wttr.in/?format=j1")
 
-    if [[ -z "$weather_data" ]]; then
-        show_centered "⚠️ Unable to fetch weather data."
+    block="
+$(figlet "Weather")
+"
+
+    if [[ -z "$weather_data" || "$weather_data" == "null" ]]; then
+        block+="\n⚠️ Unable to fetch weather data.\n"
     else
         location=$(echo "$weather_data" | jq -r '.nearest_area[0].areaName[0].value')
         temp=$(echo "$weather_data" | jq -r '.current_condition[0].temp_C')
@@ -22,15 +21,19 @@ show_weather() {
         humidity=$(echo "$weather_data" | jq -r '.current_condition[0].humidity')
         condition=$(echo "$weather_data" | jq -r '.current_condition[0].weatherDesc[0].value')
 
-        show_centered "$location"
-        echo
-        show_centered "$(figlet "$temp C")"
-        show_centered "$(figlet "$condition")"
-        echo
-        show_centered "feels like $feels_like C"
-        show_centered "Wind: $wind_speed km/h ($wind_dir)"
-        show_centered "Humidity: $humidity%"
+        block+="$location
+$(figlet "$temp C")
+
+feels like $feels_like C
+
+$(figlet "$condition")
+
+Wind: $wind_speed km/h ($wind_dir)
+Humidity: $humidity%\n
+"
     fi
+
+    show_centered_block "$block"
 
     read -rsn1 input
     case "$input" in
