@@ -29,7 +29,7 @@ feels like $feels_like C
 $(figlet "$condition")
 
 Wind: $wind_speed km/h ($wind_dir)
-Humidity: $humidity%\n
+Humidity: $humidity%
 "
     fi
 
