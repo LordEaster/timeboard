@@ -26,3 +26,47 @@ show_centered_block() {
         printf "%*s\n" $(( ( $(tput cols) + ${#line} ) / 2 )) "$line"
     done
 }
+
+load_env() {
+    local env_file="$(dirname "$(dirname "$0")")/.env"
+    [[ -f "$env_file" ]] && export $(grep -v '^#' "$env_file" | xargs)
+}
+
+update_env() {
+    local key="$1"
+    local value="$2"
+    local env_file="$(dirname "$(dirname "$0")")/.env"
+
+    touch "$env_file"
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS requires '' after -i
+        if grep -q "^$key=" "$env_file"; then
+            sed -i '' "s|^$key=.*|$key=$value|" "$env_file"
+        else
+            echo "$key=$value" >> "$env_file"
+        fi
+        sed -i '' '/^\s*$/d' "$env_file"
+    else
+        # Linux
+        if grep -q "^$key=" "$env_file"; then
+            sed -i "s|^$key=.*|$key=$value|" "$env_file"
+        else
+            echo "$key=$value" >> "$env_file"
+        fi
+        sed -i '/^\s*$/d' "$env_file"
+    fi
+}
+
+
+handle_shortcut() {
+    case "$1" in
+        i) show_dashboard ;;
+        c) show_clock ;;
+        w) show_weather ;;
+        e) show_events ;;
+        s) show_settings ;;
+        h) show_help ;;
+        *) return 1 ;;
+    esac
+}
