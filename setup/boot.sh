@@ -25,3 +25,12 @@ for pkg in "${REQUIRED_PKGS[@]}"; do
         $INSTALL_CMD $pkg
     fi
 done
+
+# ====== Create .env file if don't have ======
+env_file="data/.env"
+[[ ! -f $env_file ]] && cat <<EOF > "$env_file"
+TIME_FORMAT=12
+TEMP_UNIT=C
+SHOW_GUIDE=true
+EOF
+
