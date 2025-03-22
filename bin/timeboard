@@ -1,4 +1,8 @@
 #!/bin/bash
+trap 'tput cnorm; echo -ne "\e[?12h"' EXIT
+tput civis
+echo -ne '\e[?12l'
+
 source "$(dirname "$0")/../setup/boot.sh"
 source "$(dirname "$0")/../modules/utils.sh"
 source "$(dirname "$0")/../modules/dashboard.sh"
