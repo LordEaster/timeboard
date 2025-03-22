@@ -1,0 +1,10 @@
+#!/bin/bash
+source "$(dirname "$0")/../setup/boot.sh"
+source "$(dirname "$0")/../modules/utils.sh"
+source "$(dirname "$0")/../modules/dashboard.sh"
+source "$(dirname "$0")/../modules/clock.sh"
+source "$(dirname "$0")/../modules/weather.sh"
+source "$(dirname "$0")/../modules/events.sh"
+source "$(dirname "$0")/../modules/help.sh"
+
+show_dashboard
