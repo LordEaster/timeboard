@@ -32,5 +32,7 @@ env_file="data/.env"
 TIME_FORMAT=12
 TEMP_UNIT=C
 SHOW_GUIDE=true
+LOCATION_MODE=auto
+LOCATION_NAME=Bangkok
 EOF
 
