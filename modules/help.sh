@@ -28,6 +28,8 @@ e - Events
 s - Settings
 h - Help
 
+Crlt + c - Exit
+
 Press any key to return to dashboard
 "
     show_centered_block "$block"
