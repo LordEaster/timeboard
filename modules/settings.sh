@@ -11,13 +11,17 @@ show_settings() {
     time_fmt="${TIME_FORMAT:-12}"
     temp_unit="${TEMP_UNIT:-C}"
     show_guide="${SHOW_GUIDE:-true}"
+    location_mode="${LOCATION_MODE:-auto}"
+    location_name="${LOCATION_NAME:-Bangkok}"
 
     block="
 $(figlet "Settings")
 
 1. Time Format     : $time_fmt-hour ($([[ "$time_fmt" == "12" ]] && echo "11:59 PM" || echo "23:59"))   
 2. Temp Unit       : $temp_unit ($([[ "$temp_unit" == "C" ]] && echo "Celsius" || echo "Fahrenheit"))   
-3. Show Guide Bar  : $show_guide ($(echo "$show_guide" | sed 's/true/Visible/g; s/false/Hidden/g'))     
+3. Show Guide Bar  : $show_guide ($(echo "$show_guide" | sed 's/true/Visible/g; s/false/Hidden/g')) 
+4. Location Mode     : $location_mode ($([[ "$location_mode" == "auto" ]] && echo "Use IP detection" || echo "Use fixed name"))
+5. Fixed Location    : $location_name
 
 "
     [[ "$SHOW_GUIDE" != "false" ]] && block+=$'\nPress → [i] Dashboard | [h] Help'
@@ -40,6 +44,29 @@ $(figlet "Settings")
         3)
             new_guide=$([[ "$show_guide" == "true" ]] && echo "false" || echo "true")
             update_env "SHOW_GUIDE" "$new_guide"
+            load_env
+            show_settings
+            ;;
+        4)
+            new_mode=$([[ "$location_mode" == "auto" ]] && echo "fixed" || echo "auto")
+            update_env "LOCATION_MODE" "$new_mode"
+            load_env
+            show_settings
+            ;;
+        5)
+            clear
+            echo
+            echo "Enter a fixed location (city, country, etc.):"
+            read -rp "> " new_loc
+            valid_loc=$(validate_location "$new_loc")
+
+            if [[ -n "$valid_loc" ]]; then
+                update_env "LOCATION_NAME" "$new_loc"
+            else
+                echo "⚠️ Invalid location. Please try again."
+                sleep 2
+            fi
+
             load_env
             show_settings
             ;;
