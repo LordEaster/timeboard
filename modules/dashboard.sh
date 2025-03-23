@@ -17,11 +17,27 @@ show_dashboard() {
         now=$(date +"$time_fmt")
         date=$(date "+%d %B %Y")
 
+        # Determine location
+        if [[ "$LOCATION_MODE" == "auto" ]]; then
+            location=$(curl -s ipinfo.io/city)
+        else
+            location="$LOCATION_NAME"
+        fi
+
         # Weather format
         if [[ "$TEMP_UNIT" == "F" ]]; then
-            weather=$(curl -s "wttr.in/?format=3&u")
+            weather_data=$(curl -s "wttr.in/${location// /%20}?format=j1&u")
         else
-            weather=$(curl -s "wttr.in/?format=3")
+            weather_data=$(curl -s "wttr.in/${location// /%20}?format=j1")
+        fi
+
+        if [[ -n "$weather_data" && "$weather_data" != "null" ]]; then
+            location_name=$(echo "$weather_data" | jq -r '.nearest_area[0].areaName[0].value')
+            weather_line=$(echo "$weather_data" | jq -r '.current_condition[0].weatherDesc[0].value')
+            temp=$(echo "$weather_data" | jq -r ".current_condition[0].temp_${TEMP_UNIT:-C}")
+            weather="📍 $location_name  |  $weather_line, $temp °$TEMP_UNIT"
+        else
+            weather="⚠️ Unable to fetch weather info"
         fi
 
         block="
