@@ -58,7 +58,6 @@ update_env() {
     fi
 }
 
-
 handle_shortcut() {
     case "$1" in
         i) show_dashboard ;;
@@ -69,4 +68,17 @@ handle_shortcut() {
         h) show_help ;;
         *) return 1 ;;
     esac
+}
+
+validate_location() {
+    local query="$1"
+    local result
+    result=$(curl -s "wttr.in/${query// /%20}?format=%l" | head -n 1)
+
+    # Accept if not empty and not "Unknown location"
+    if [[ -n "$result" && "$result" != *"Unknown location"* ]]; then
+        echo "$result"
+    else
+        echo ""
+    fi
 }
