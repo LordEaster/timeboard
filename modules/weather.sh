@@ -41,11 +41,11 @@ $(figlet "Weather")
         condition=$(echo "$weather_data" | jq -r '.current_condition[0].weatherDesc[0].value')
 
         block+="$location
-
-$(figlet "$temp $unit")
+$(printf "\e[1;37m")
+$(figlet -f big "$temp $unit") $(printf "\e[0m")
 feels like $feels_like $unit
-
-$(figlet "$condition")
+$(printf "\e[1;37m")
+$(figlet "$condition") $(printf "\e[0m")
 
 Wind: $wind_speed km/h ($wind_dir)
 Humidity: $humidity%

@@ -10,8 +10,8 @@ show_clock() {
 
         block="
 $(figlet "Clock")
-
-$(figlet "$now")
+$(printf "\e[1;37m")
+$(figlet -f big "$now") $(printf "\e[0m")
 $date
 "
 

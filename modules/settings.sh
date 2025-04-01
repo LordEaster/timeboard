@@ -15,7 +15,8 @@ show_settings() {
     location_name="${LOCATION_NAME:-Bangkok}"
 
     block="
-$(figlet "Settings")
+$(printf "\e[1;37m")
+$(figlet "Settings") $(printf "\e[0m")
 
 1. Time Format     : $time_fmt-hour ($([[ "$time_fmt" == "12" ]] && echo "11:59 PM" || echo "23:59"))   
 2. Temp Unit       : $temp_unit ($([[ "$temp_unit" == "C" ]] && echo "Celsius" || echo "Fahrenheit"))   

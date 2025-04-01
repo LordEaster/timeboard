@@ -43,7 +43,8 @@ show_dashboard() {
         block="
 - Random Quote and Reminder (Coming Soon) -
 
-$(figlet "$now")
+$(printf "\e[1;37m")
+$(figlet -f big "$now") $(printf "\e[0m")
 $(figlet "$date")
 
 $weather

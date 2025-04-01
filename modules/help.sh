@@ -12,7 +12,8 @@ show_help() {
     [[ -f "$VERSION_FILE" ]] && VERSION=$(cat "$VERSION_FILE")
 
     block="
-$(figlet "TimeBoard")
+$(printf "\e[1;37m") 
+$(figlet "TimeBoard") $(printf "\e[0m")
 Version: $VERSION
 --------------------------------------
 A simple dashboard for your terminal
